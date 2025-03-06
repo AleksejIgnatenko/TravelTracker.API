@@ -21,7 +21,7 @@ namespace TravelTracker.Application.Services
             _validationService = validationService;
         }
 
-        public async Task CreateTripCertificateAsync(Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate)
+        public async Task CreateTripCertificateAsync(string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
             var command = await _commandRepository.GetByIdAsync(commandId);
@@ -30,6 +30,7 @@ namespace TravelTracker.Application.Services
             var tripCertificate = new TripCertificateEntity
             {
                 Id = Guid.NewGuid(),
+                Name = name,
                 Employee = employee,
                 Command = command,
                 City = city,
@@ -51,7 +52,22 @@ namespace TravelTracker.Application.Services
             return await _tripCertificateRepository.GetAllAsync();
         }
 
-        public async Task UpdateTripCertificateAsync(Guid id, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate)
+        public async Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCityIdAsync(Guid cityId)
+        {
+            return await _tripCertificateRepository.GetByCityIdAsync(cityId);
+        }
+
+        public async Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCommandIdAsync(Guid commandId)
+        {
+            return await _tripCertificateRepository.GetByCommandIdAsync(commandId);
+        }
+
+        public async Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByEmployeeIdAsync(Guid employeeId)
+        {
+            return await _tripCertificateRepository.GetByEmployeeIdAsync(employeeId);
+        }
+
+        public async Task UpdateTripCertificateAsync(Guid id, string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate)
         {
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
             var command = await _commandRepository.GetByIdAsync(commandId);
@@ -60,6 +76,7 @@ namespace TravelTracker.Application.Services
             var tripCertificate = new TripCertificateEntity
             {
                 Id = id,
+                Name = name,
                 Employee = employee,
                 Command = command,
                 City = city,

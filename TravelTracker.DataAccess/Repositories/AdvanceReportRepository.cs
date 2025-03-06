@@ -16,6 +16,17 @@ namespace TravelTracker.DataAccess.Repositories
             return await _context.AdvanceReports
                 .AsNoTracking()
                 .Include(a => a.TripCertificate)
+                .Include(a => a.TripExpenses)
+                .ToListAsync();
+        }
+
+        public async Task<List<AdvanceReportEntity>> GetByTripCertificateIdAsync(Guid tripCertificateId)
+        {
+            return await _context.AdvanceReports
+                .AsNoTracking()
+                .Where(a => a.TripCertificate.Id.Equals(tripCertificateId))
+                .Include(a => a.TripCertificate)
+                .Include(a => a.TripExpenses)
                 .ToListAsync();
         }
     }

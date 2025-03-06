@@ -33,6 +33,26 @@ namespace TravelTracker.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("advanceReportId={advanceReportId:guid}")]
+        public async Task<ActionResult> GetTripExpenseByAdvanceReportIdAsync(Guid advanceReportId)
+        {
+            var advanceReports = await _tripExpenseService.GetTripExpenseByAdvanceReportIdAsync(advanceReportId);
+
+            var response = advanceReports.Select(t => new TripExpenseResponse(t.Id, t.AdvanceReport.Id, t.TripExpenseType.Id, t.TripExpenseType.Name, t.Amount, t.Date, t.Description));
+
+            return Ok(response);
+        }
+
+        [HttpGet("tripExpenseTypeId={tripExpenseTypeId:guid}")]
+        public async Task<ActionResult> GetTripExpenseByTripExpenseTypeIdAsync(Guid tripExpenseTypeId)
+        {
+            var advanceReports = await _tripExpenseService.GetTripExpenseByTripExpenseTypeIdAsync(tripExpenseTypeId);
+
+            var response = advanceReports.Select(t => new TripExpenseResponse(t.Id, t.AdvanceReport.Id, t.TripExpenseType.Id, t.TripExpenseType.Name, t.Amount, t.Date, t.Description));
+
+            return Ok(response);
+        }
+
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateTripExpenseAsync(Guid id, [FromBody] TripExpenseRequest tripExpenseRequest)
         {

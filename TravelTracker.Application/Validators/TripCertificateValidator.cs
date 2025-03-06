@@ -7,6 +7,9 @@ namespace TravelTracker.Application.Validators
     {
         public TripCertificateValidator()
         {
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Название удостоверения не может быть пустым");
+
             RuleFor(x => x.StartDate)
                 .Matches(@"^\d{4}-\d{2}-\d{2}$").WithMessage("Дата начала командировки должно быть в формате yyyy-MM-dd.");
 

@@ -18,7 +18,7 @@ namespace TravelTracker.API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAdvanceReportAsync([FromBody] AdvanceReportRequest advanceReportRequest)
         {
-            await _advanceReportService.CreateAdvanceReportAsync(advanceReportRequest.TripCertificateId, advanceReportRequest.TotalAmount, advanceReportRequest.DateOfDelivery);
+            await _advanceReportService.CreateAdvanceReportAsync(advanceReportRequest.TripCertificateId, advanceReportRequest.DateOfDelivery);
 
             return Ok();
         }
@@ -28,7 +28,17 @@ namespace TravelTracker.API.Controllers
         {
             var advanceReports = await _advanceReportService.GetAllAdvanceReportsAsync();
 
-            var response = advanceReports.Select(a => new AdvanceReportResponse(a.Id, a.TripCertificate.Id, a.TotalAmount, a.DateOfDelivery));
+            var response = advanceReports.Select(a => new AdvanceReportResponse(a.Id, a.TripCertificate.Id, a.TripCertificate.Name, a.TripExpenses.Sum(t => t.Amount), a.DateOfDelivery));
+
+            return Ok(response);
+        }
+
+        [HttpGet("tripCertificateId={tripCertificateId:guid}")]
+        public async Task<ActionResult> GetAdvanceReportByTripCertificateIdAsync(Guid tripCertificateId)
+        {
+            var advanceReports = await _advanceReportService.GetAdvanceReportByTripCertificateIdAsync(tripCertificateId);
+
+            var response = advanceReports.Select(a => new AdvanceReportResponse(a.Id, a.TripCertificate.Id, a.TripCertificate.Name, a.TripExpenses.Sum(t => t.Amount), a.DateOfDelivery));
 
             return Ok(response);
         }
@@ -36,7 +46,7 @@ namespace TravelTracker.API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateAdvanceReportAsync(Guid id, [FromBody] AdvanceReportRequest advanceReportRequest)
         {
-            await _advanceReportService.UpdateAdvanceReportAsync(id, advanceReportRequest.TripCertificateId, advanceReportRequest.TotalAmount, advanceReportRequest.DateOfDelivery);
+            await _advanceReportService.UpdateAdvanceReportAsync(id, advanceReportRequest.TripCertificateId, advanceReportRequest.DateOfDelivery);
 
             return Ok();
         }

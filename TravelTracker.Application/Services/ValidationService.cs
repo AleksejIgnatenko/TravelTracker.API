@@ -22,7 +22,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -39,7 +39,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -56,7 +56,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -73,7 +73,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -90,7 +90,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -107,7 +107,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 
@@ -124,7 +124,7 @@ namespace TravelTracker.Application.Services
             {
                 foreach (var failure in validationResult.Errors)
                 {
-                    errors[failure.PropertyName] = failure.ErrorMessage;
+                    errors[failure.PropertyName.ToLower()] = failure.ErrorMessage;
                 }
             }
 

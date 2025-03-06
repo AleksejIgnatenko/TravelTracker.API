@@ -7,7 +7,6 @@ namespace TravelTracker.Core.Models.AdvanceReportModels
     {
         public TripCertificateEntity TripCertificate { get; set; } = new TripCertificateEntity();
         public IEnumerable<TripExpenseEntity> TripExpenses { get; set; } = new List<TripExpenseEntity>();
-        public decimal TotalAmount { get; set; }
         public string DateOfDelivery { get; set; } = string.Empty;
     }
 }

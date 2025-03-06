@@ -19,5 +19,25 @@ namespace TravelTracker.DataAccess.Repositories
                 .Include(t => t.TripExpenseType)
                 .ToListAsync();
         }
+
+        public async Task<List<TripExpenseEntity>> GetByAdvanceReportIdAsync(Guid advanceReportId)
+        {
+            return await _context.TripExpenses
+                .AsNoTracking()
+                .Where(t => t.AdvanceReport.Id.Equals(advanceReportId))
+                .Include(t => t.AdvanceReport)
+                .Include(t => t.TripExpenseType)
+                .ToListAsync();
+        }
+
+        public async Task<List<TripExpenseEntity>> GetByTripExpenseTypeIdAsync(Guid tripExpenseTypeId)
+        {
+            return await _context.TripExpenses
+                .AsNoTracking()
+                .Where(t => t.TripExpenseType.Id.Equals(tripExpenseTypeId))
+                .Include(t => t.AdvanceReport)
+                .Include(t => t.TripExpenseType)
+                .ToListAsync();
+        }
     }
 }

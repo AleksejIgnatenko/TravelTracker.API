@@ -17,7 +17,7 @@ namespace TravelTracker.Application.Services
             _validationService = validationService;
         }
 
-        public async Task CreateAdvanceReportAsync(Guid tripCertificateId, decimal totalAmount, string dateOfDelivery)
+        public async Task CreateAdvanceReportAsync(Guid tripCertificateId, string dateOfDelivery)
         {
             var tripCertificate = await _tripCertificateRepository.GetByIdAsync(tripCertificateId);
 
@@ -25,7 +25,6 @@ namespace TravelTracker.Application.Services
             {
                 Id = Guid.NewGuid(),
                 TripCertificate = tripCertificate,
-                TotalAmount = totalAmount,
                 DateOfDelivery = dateOfDelivery,
             };
 
@@ -43,17 +42,18 @@ namespace TravelTracker.Application.Services
             return await _advanceReportRepository.GetAllAsync();
         }
 
-        public async Task UpdateAdvanceReportAsync(Guid id, Guid tripCertificateId, decimal totalAmount, string dateOfDelivery)
+        public async Task<IEnumerable<AdvanceReportEntity>> GetAdvanceReportByTripCertificateIdAsync(Guid tripCertificateId)
         {
+            return await _advanceReportRepository.GetByTripCertificateIdAsync(tripCertificateId);
+        }
+
+        public async Task UpdateAdvanceReportAsync(Guid id, Guid tripCertificateId, string dateOfDelivery)
+        {
+            var advanceReport = await _advanceReportRepository.GetByIdAsync(id);
             var tripCertificate = await _tripCertificateRepository.GetByIdAsync(tripCertificateId);
 
-            var advanceReport = new AdvanceReportEntity
-            {
-                Id = id,
-                TripCertificate = tripCertificate,
-                TotalAmount = totalAmount,
-                DateOfDelivery = dateOfDelivery,
-            };
+            advanceReport.TripCertificate = tripCertificate;
+            advanceReport.DateOfDelivery = dateOfDelivery;
 
             var validationErrors = _validationService.Validation(advanceReport);
             if (validationErrors.Count != 0)

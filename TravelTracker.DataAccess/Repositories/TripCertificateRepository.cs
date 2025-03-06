@@ -20,5 +20,38 @@ namespace TravelTracker.DataAccess.Repositories
                 .Include(t => t.City)
                 .ToListAsync();
         }
+
+        public async Task<List<TripCertificateEntity>> GetByCityIdAsync(Guid cityId)
+        {
+            return await _context.TripCertificates
+                .AsNoTracking()
+                .Where(t => t.City.Id.Equals(cityId))
+                .Include(t => t.Employee)
+                .Include(t => t.Command)
+                .Include(t => t.City)
+                .ToListAsync();
+        }
+
+        public async Task<List<TripCertificateEntity>> GetByCommandIdAsync(Guid commandId)
+        {
+            return await _context.TripCertificates
+                .AsNoTracking()
+                .Where(t => t.Command.Id.Equals(commandId))
+                .Include(t => t.Employee)
+                .Include(t => t.Command)
+                .Include(t => t.City)
+                .ToListAsync();
+        }
+
+        public async Task<List<TripCertificateEntity>> GetByEmployeeIdAsync(Guid employeeId)
+        {
+            return await _context.TripCertificates
+                .AsNoTracking()
+                .Where(t => t.Employee.Id.Equals(employeeId))
+                .Include(t => t.Employee)
+                .Include(t => t.Command)
+                .Include(t => t.City)
+                .ToListAsync();
+        }
     }
 }

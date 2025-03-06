@@ -4,9 +4,12 @@ namespace TravelTracker.Core.Abstractions
 {
     public interface ITripCertificateService
     {
-        Task CreateTripCertificateAsync(Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate);
+        Task CreateTripCertificateAsync(string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate);
         Task DeleteTripCertificateAsync(Guid id);
         Task<IEnumerable<TripCertificateEntity>> GetAllTripCertificatesAsync();
-        Task UpdateTripCertificateAsync(Guid id, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate);
+        Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCityIdAsync(Guid cityId);
+        Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCommandIdAsync(Guid commandId);
+        Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByEmployeeIdAsync(Guid employeeId);
+        Task UpdateTripCertificateAsync(Guid id, string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate);
     }
 }

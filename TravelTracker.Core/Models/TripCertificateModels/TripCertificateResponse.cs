@@ -2,6 +2,7 @@
 {
     public record TripCertificateResponse (
         Guid Id,
+        string Name,
         Guid EmployeeId,
         string EmployeeFullName,
         Guid CommandId,
