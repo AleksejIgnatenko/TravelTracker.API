@@ -10,6 +10,7 @@ namespace TravelTracker.Core.Abstractions
         Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCityIdAsync(Guid cityId);
         Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByCommandIdAsync(Guid commandId);
         Task<IEnumerable<TripCertificateEntity>> GetTripCertificateByEmployeeIdAsync(Guid employeeId);
+        Task<MemoryStream> ExportTripCertificatesToExcelAsync();
         Task UpdateTripCertificateAsync(Guid id, string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using TravelTracker.Core.Exceptions;
 using TravelTracker.Core.Models.CityModels;
 using TravelTracker.Core.Abstractions;
+using OfficeOpenXml;
 
 namespace TravelTracker.Application.Services
 {
@@ -36,6 +37,40 @@ namespace TravelTracker.Application.Services
         public async Task<IEnumerable<CityEntity>> GetAllCitiesAsync()
         {
             return await _cityRepository.GetAllAsync();
+        }
+
+        public async Task<MemoryStream> ExportCitiesToExcelAsync()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var cities = await _cityRepository.GetAllAsync();
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Города");
+
+                worksheet.Cells[1, 1].Value = "Идентификатор";
+                worksheet.Cells[1, 2].Value = "Название города";
+                worksheet.Cells[1, 3].Value = "Страна";
+
+                int row = 2;
+                foreach (var city in cities)
+                {
+                    worksheet.Cells[row, 1].Value = city.Id;
+                    worksheet.Cells[row, 2].Value = city.Name;
+                    worksheet.Cells[row, 3].Value = city.Country;
+
+                    row++;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                await package.SaveAsAsync(stream);
+
+                stream.Position = 0;
+                return stream;
+            }
         }
 
         public async Task UpdateCityAsync(Guid id, string country, string name)

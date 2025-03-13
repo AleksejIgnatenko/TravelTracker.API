@@ -1,4 +1,5 @@
-﻿using TravelTracker.Core.Abstractions;
+﻿using OfficeOpenXml;
+using TravelTracker.Core.Abstractions;
 using TravelTracker.Core.Exceptions;
 using TravelTracker.Core.Models.AdvanceReportModels;
 
@@ -45,6 +46,44 @@ namespace TravelTracker.Application.Services
         public async Task<IEnumerable<AdvanceReportEntity>> GetAdvanceReportByTripCertificateIdAsync(Guid tripCertificateId)
         {
             return await _advanceReportRepository.GetByTripCertificateIdAsync(tripCertificateId);
+        }
+
+        public async Task<MemoryStream> ExportAdvanceReportsToExcelAsync()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var advanceReports = await _advanceReportRepository.GetAllAsync();
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Авансовый отчет");
+
+                worksheet.Cells[1, 1].Value = "Идентификатор отчета";
+                worksheet.Cells[1, 2].Value = "Дата сдачи";
+                worksheet.Cells[1, 3].Value = "Название";
+                worksheet.Cells[1, 4].Value = "Дата начала";
+                worksheet.Cells[1, 5].Value = "Дата окончания";
+
+                int row = 2;
+                foreach (var report in advanceReports)
+                {
+                    worksheet.Cells[row, 1].Value = report.Id;
+                    worksheet.Cells[row, 2].Value = report.DateOfDelivery;
+                    worksheet.Cells[row, 3].Value = report.TripCertificate.Name;
+                    worksheet.Cells[row, 4].Value = report.TripCertificate.StartDate;
+                    worksheet.Cells[row, 5].Value = report.TripCertificate.EndDate;
+
+                    row++;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                await package.SaveAsAsync(stream);
+
+                stream.Position = 0;
+                return stream;
+            }
         }
 
         public async Task UpdateAdvanceReportAsync(Guid id, Guid tripCertificateId, string dateOfDelivery)

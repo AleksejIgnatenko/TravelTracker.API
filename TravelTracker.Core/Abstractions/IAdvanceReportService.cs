@@ -8,6 +8,7 @@ namespace TravelTracker.Core.Abstractions
         Task DeleteAdvanceReportAsync(Guid id);
         Task<IEnumerable<AdvanceReportEntity>> GetAllAdvanceReportsAsync();
         Task<IEnumerable<AdvanceReportEntity>> GetAdvanceReportByTripCertificateIdAsync(Guid tripCertificateId);
+        Task<MemoryStream> ExportAdvanceReportsToExcelAsync();
         Task UpdateAdvanceReportAsync(Guid id, Guid tripCertificateId, string dateOfDelivery);
     }
 }

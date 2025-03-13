@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TravelTracker.Application.Services;
 using TravelTracker.Core.Abstractions;
 using TravelTracker.Core.Models.TripExpenseModels;
 
@@ -51,6 +52,15 @@ namespace TravelTracker.API.Controllers
             var response = advanceReports.Select(t => new TripExpenseResponse(t.Id, t.AdvanceReport.Id, t.TripExpenseType.Id, t.TripExpenseType.Name, t.Amount, t.Date, t.Description));
 
             return Ok(response);
+        }
+
+        [HttpGet("export-to-excel")]
+        public async Task<ActionResult> ExportToExcelAsync()
+        {
+            var stream = await _tripExpenseService.ExportTripExpensesToExcelAsync();
+            var fileName = "items.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         [HttpPut("{id:guid}")]

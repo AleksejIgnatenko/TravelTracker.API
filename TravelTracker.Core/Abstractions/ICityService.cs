@@ -7,6 +7,7 @@ namespace TravelTracker.Core.Abstractions
         Task CreateCityAsync(string country, string name);
         Task DeleteCityAsync(Guid id);
         Task<IEnumerable<CityEntity>> GetAllCitiesAsync();
+        Task<MemoryStream> ExportCitiesToExcelAsync();
         Task UpdateCityAsync(Guid id, string country, string name);
     }
 }

@@ -33,6 +33,24 @@ namespace TravelTracker.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("export-to-excel")]
+        public async Task<ActionResult> ExportToExcelAsync()
+        {
+            var stream = await _commandService.ExportCommandsToExcelAsync();
+            var fileName = "items.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
+        [HttpGet("export-date-quantity-chart-to-excel")]
+        public async Task<ActionResult> ExportDateQuantityChartToExcelAsync()
+        {
+            var stream = await _commandService.ExportDateQuantityChartToExcelAsync();
+            var fileName = "graphic.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateCommandAsync(Guid id, [FromBody] CommandRequest commandRequest)
         {

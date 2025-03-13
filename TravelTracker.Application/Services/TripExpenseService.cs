@@ -1,4 +1,5 @@
-﻿using TravelTracker.Core.Abstractions;
+﻿using OfficeOpenXml;
+using TravelTracker.Core.Abstractions;
 using TravelTracker.Core.Exceptions;
 using TravelTracker.Core.Models.TripExpenseModels;
 
@@ -63,6 +64,42 @@ namespace TravelTracker.Application.Services
         public async Task<IEnumerable<TripExpenseEntity>> GetTripExpenseByTripExpenseTypeIdAsync(Guid tripExpenseTypeId)
         {
             return await _tripExpenseRepository.GetByTripExpenseTypeIdAsync(tripExpenseTypeId);
+        }
+
+        public async Task<MemoryStream> ExportTripExpensesToExcelAsync()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var tripExpenses = await _tripExpenseRepository.GetAllAsync();
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Командировочные расходы");
+
+                worksheet.Cells[1, 1].Value = "Идентификатор";
+                worksheet.Cells[1, 2].Value = "Сумма";
+                worksheet.Cells[1, 3].Value = "Дата";
+                worksheet.Cells[1, 4].Value = "Описание";
+
+                int row = 2;
+                foreach (var tripExpense in tripExpenses)
+                {
+                    worksheet.Cells[row, 1].Value = tripExpense.Id;
+                    worksheet.Cells[row, 2].Value = tripExpense.Amount;
+                    worksheet.Cells[row, 3].Value = tripExpense.Date;
+                    worksheet.Cells[row, 4].Value = tripExpense.Description;
+
+                    row++;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                await package.SaveAsAsync(stream);
+
+                stream.Position = 0;
+                return stream;
+            }
         }
 
         public async Task UpdateTripExpenseAsync(Guid id, Guid advanceReportEntityId, Guid tripExpenseTypeId, decimal amount, string date, string description)

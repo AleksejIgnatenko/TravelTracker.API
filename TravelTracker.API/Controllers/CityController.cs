@@ -33,6 +33,15 @@ namespace TravelTracker.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("export-to-excel")]
+        public async Task<ActionResult> ExportToExcelAsync()
+        {
+            var stream = await _cityService.ExportCitiesToExcelAsync();
+            var fileName = "items.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateCityAsync(Guid id, [FromBody] CityRequest cityRequest)
         {
