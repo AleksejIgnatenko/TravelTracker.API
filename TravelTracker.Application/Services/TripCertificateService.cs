@@ -2,6 +2,7 @@
 using TravelTracker.Core.Abstractions;
 using TravelTracker.Core.Exceptions;
 using TravelTracker.Core.Models.BusinessTripModels;
+using Xceed.Words.NET;
 
 namespace TravelTracker.Application.Services
 {
@@ -102,6 +103,58 @@ namespace TravelTracker.Application.Services
                 stream.Position = 0;
                 return stream;
             }
+        }
+
+        public async Task<MemoryStream> GenerateTripCertificateToWordAsync(Guid id)
+        {
+            var tripCertificate = await _tripCertificateRepository.GetByIdAsync(id);
+            MemoryStream memoryStream = new MemoryStream();
+
+            try
+            {
+                string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "./docs/TripCertificate.docx");
+
+                if (!File.Exists(templatePath))
+                {
+                    throw new FileNotFoundException("Шаблон документа не найден.", templatePath);
+                }
+
+                using (DocX document = DocX.Load(templatePath))
+                {
+                    var replacements = new Dictionary<string, string>
+                    {
+                        { "{{FirstName}}", tripCertificate.Employee.FirstName },
+                        { "{{LastName}}", tripCertificate.Employee.LastName },
+                        { "{{MiddleName}}", tripCertificate.Employee.MiddleName },
+                        { "{{Position}}", tripCertificate.Employee.Position },
+                        { "{{Department}}", tripCertificate.Employee.Department },
+                        { "{{Country}}", tripCertificate.City.Country },
+                        { "{{Name}}", tripCertificate.City.Name },
+                        { "{{StartDate}}", tripCertificate.StartDate },
+                        { "{{EndDate}}", tripCertificate.EndDate },
+                    };
+
+                    foreach (var replacement in replacements)
+                    {
+                        document.ReplaceText(replacement.Key, replacement.Value);
+                    }
+
+                    document.SaveAs(memoryStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
+                throw new InvalidOperationException("Ошибка при генерации сертификата.", ex);
+            }
+
+            if (memoryStream.Length == 0)
+            {
+                throw new InvalidOperationException("Сгенерированный документ пуст.");
+            }
+
+            memoryStream.Position = 0;
+            return memoryStream;
         }
 
         public async Task UpdateTripCertificateAsync(Guid id, string name, Guid employeeId, Guid commandId, Guid cityId, string startDate, string endDate)

@@ -16,19 +16,9 @@ namespace TravelTracker.DataAccess.Repositories
 
         public virtual async Task CreateAsync(T entity)
         {
-            //try
-            //{
-                await _context.Set<T>().AddAsync(entity);
-                await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateException ex)
-            //{
-            //    if (ex.InnerException is SqlException sqlEx)
-            //    {
 
-            //        Console.WriteLine("1111111111111111" + sqlEx.Message);
-            //    }
-            //}
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task<List<T>> GetAllAsync()

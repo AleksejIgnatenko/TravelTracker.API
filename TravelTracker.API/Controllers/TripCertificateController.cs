@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TravelTracker.Application.Services;
 using TravelTracker.Core.Abstractions;
-using TravelTracker.Core.Models.AdvanceReportModels;
 using TravelTracker.Core.Models.TripCertificateModels;
 
 namespace TravelTracker.API.Controllers
@@ -11,7 +10,6 @@ namespace TravelTracker.API.Controllers
     public class TripCertificateController : ControllerBase
     {
         private readonly ITripCertificateService _tripCertificateService;
-
         public TripCertificateController(ITripCertificateService tripCertificateService)
         {
             _tripCertificateService = tripCertificateService;
@@ -80,6 +78,15 @@ namespace TravelTracker.API.Controllers
             var fileName = "items.xlsx";
 
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
+        [HttpGet("generate-trip-certificate-to-word/{id:guid}")]
+        public async Task<ActionResult> GenerateTripCertificateToWordAsync(Guid id)
+        {
+            var stream = await _tripCertificateService.GenerateTripCertificateToWordAsync(id);
+            var fileName = $"certificate.docx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
 
         [HttpPut("{id:guid}")]
